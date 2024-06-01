@@ -111,6 +111,11 @@ def help(client, message):
     help_text = """
     Hi Sir 👋\nOur bot supports only Public restricted channel**.\n\nIt does not support private channel/group and public group. Soon, A bot will be available for private download also.\n Thanks 👍" 
     """
-    message.reply_text(help_text)
+    message.reply_text(help_text,
+    reply_markup=InlineKeyboardMarkup(
+        [
+            [InlineKeyboardButton('👁️ Close', callback_data='cancel')]
+        ]
+    ))
 
 ########################🎊 Lisa | NT
