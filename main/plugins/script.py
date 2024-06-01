@@ -4,5 +4,5 @@ class Translation(object):
     WAIT_MSG = """"<b>Processing ...</b>"""
     REPLY_ERROR = """<code>Use this command as a replay to any telegram message with out any spaces.</code>"""
     Donate = """
-Hi Bro , If this bot helped you , kindly Donate to keep this service alive. you can send any amount**\n20₹, 30₹, 50₹, 100₹\n\n🔘 Payment Methods : `aman-9298@paytm` \n `aman-9298@paytm`.
+Hi, Bro 👋 If this bot helped you , kindly Donate to keep this service alive. you can send any amount**\n20₹, 30₹, 50₹, 100₹\n\n🔘 Payment Methods : `aman-9298@paytm` \n `aman-9298@paytm`.
 """
