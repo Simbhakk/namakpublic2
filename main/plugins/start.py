@@ -4,7 +4,7 @@ from pyrogram import Client, filters
 from .. import Bot
 from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ForceReply
-from main.plugins.config import Config
+#from main.plugins.config import Config
 from main.plugins.script import Translation
 from main.plugins.database import add_user, del_user, full_userbase, present_user
 ########################🎊 Lisa | NT BOTS 🎊######################################################
