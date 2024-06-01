@@ -13,10 +13,10 @@ async def cancel(client, callback_query):
     await callback_query.message.delete()
 
 # About command handler
-@Bot.on_message(filters.private & filters.command("about"))
-async def about(client, message):
+@Bot.on_message(filters.private & filters.command("donate"))
+async def donate(client, message):
     await message.reply_text(
-        text=Translation.ABOUT_TXT,
+        text=Translation.Donate,
         disable_web_page_preview=True,
         reply_markup=InlineKeyboardMarkup(
         [
@@ -93,11 +93,11 @@ async def start(client, message):
         reply_markup=InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton('📍 Update Channel', url='https://t.me/Save_Restricted_contentz'),
+                InlineKeyboardButton('📍 Update Channel', url='https://t.me/Rajz_bots'),
             ],
             [
                 InlineKeyboardButton('👩‍💻 SOURCE', url='https://t.me/Save_Restricted_contentz/19'),
-                InlineKeyboardButton('🍻 Support Group', url='https://t.me/Rajz_bots'),
+                InlineKeyboardButton('🍻 Support Group', url='https://t.me/Save_Restricted_contentz'),
             ],
             [
                 InlineKeyboardButton('👁️ Close', callback_data='cancel')
@@ -109,7 +109,7 @@ async def start(client, message):
 @Bot.on_message(filters.command("help"))
 def help(client, message):
     help_text = """
-    Our bot supports only Public restricted channel**.\n\nIt does not support private channel/group and public group. Soon, A bot will be available for private download also." 
+    Hi Sir 👋\nOur bot supports only Public restricted channel**.\n\nIt does not support private channel/group and public group. Soon, A bot will be available for private download also.\n Thanks 👍" 
     """
     message.reply_text(help_text)
 
