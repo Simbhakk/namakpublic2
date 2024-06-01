@@ -1,208 +1,122 @@
-#Github.com/im-Rudraa332
+# [⚠️ Do not change this repo link ⚠️] :- https://github.com/LISA-KOREA/YouTube-Video-Download-Bot
 
-import os
+from pyrogram import Client, filters
 from .. import Bot
-from telethon import events, Button
-from pyrogram import filters,Client
-#async def start_srb(event, st):
-from .. import AUTH
+from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ForceReply
+from main.plugins.config import Config
+from main.plugins.script import Translation
+from main.plugins.database import add_user, del_user, full_userbase, present_user
+########################🎊 Lisa | NT BOTS 🎊######################################################
+@Bot.on_callback_query(filters.regex("cancel"))
+async def cancel(client, callback_query):
+    await callback_query.message.delete()
 
-from pyrogram import filters
+# About command handler
+@Bot.on_message(filters.private & filters.command("about"))
+async def about(client, message):
+    await message.reply_text(
+        text=Translation.ABOUT_TXT,
+        disable_web_page_preview=True,
+        reply_markup=InlineKeyboardMarkup(
+        [
+            [InlineKeyboardButton('⛔️ Close', callback_data='cancel')]
+        ]
+    ))
 
-Rudraa="""Hi, sir batch or bulk is not free. you can see this smalll plan\nhttps://t.me/Save_Restricted_contentz/11"""
+#users numbers hnadler
+@Bot.on_message(filters.command('users'))
+async def get_users(client, message):
+    msg = await client.send_message(chat_id=message.chat.id, text=Translation.WAIT_MSG)
+    users = await full_userbase()
+    await msg.edit(f"{len(users)} users are using this bot")
 
-@Bot.on_message((filters.command("bulk") & filters.private & ~filters.user(AUTH)) | filters.command("batch") & ~filters.user(AUTH))
+#broadcast command handler
+@Bot.on_message(filters.command('broadcast'))
+async def send_text(client, message):
+    if message.reply_to_message:
+        query = await full_userbase()
+        broadcast_msg = message.reply_to_message
+        total = 0
+        successful = 0
+        blocked = 0
+        deleted = 0
+        unsuccessful = 0
+        
+        pls_wait = await message.reply("<i>Broadcasting Message.. This will Take Some Time</i>")
+        for chat_id in query:
+            try:
+                await broadcast_msg.copy(chat_id)
+                successful += 1
+            except FloodWait as e:
+                await asyncio.sleep(e.x)
+                await broadcast_msg.copy(chat_id)
+                successful += 1
+            except UserIsBlocked:
+                await del_user(chat_id)
+                blocked += 1
+            except InputUserDeactivated:
+                await del_user(chat_id)
+                deleted += 1
+            except:
+                unsuccessful += 1
+                pass
+            total += 1
+        
+        status = f"""<b><u>Broadcast Completed</u>
 
-async def start(bot, cmd):
+Total Users: <code>{total}</code>
+Successful: <code>{successful}</code>
+Blocked Users: <code>{blocked}</code>
+Deleted Accounts: <code>{deleted}</code>
+Unsuccessful: <code>{unsuccessful}</code></b>"""
+        
+        return await pls_wait.edit(status)
 
-    await cmd.reply_text(
-
-        Rudraa.format(cmd.from_user.first_name, cmd.from_user.id)
-
-    )
-
-    return
-#------------------------------------------------------>
-from pyrogram import Client
-from pyrogram.types import Message
-
-from pyrogram.types import (
-    InlineKeyboardMarkup,
-    InlineKeyboardButton,
-    CallbackQuery,
-    Message
-)
-# ------------------------------------> Added log channel
-from .configs import Config
-from .database import Database
-import datetime
-
-BOT_USERNAME = Config.BOT_USERNAME
-BOT_TOKEN = Config.BOT_TOKEN
-API_ID = Config.API_ID
-API_HASH = Config.API_HASH
-LOG_CHANNEL = Config.LOG_CHANNEL
-#AUTH = Config.AUTH
-db= Database(Config.DATABASE_URL, BOT_USERNAME)
-
-async def foo(bot, cmd):
-    chat_id = cmd.from_user.id
-    if not await db.is_user_exist(chat_id):
-        await db.add_user(chat_id)
-        await bot.send_message(
-            Config.LOG_CHANNEL,
-            f"#NEW_USER: \n\nNew User [{cmd.from_user.first_name}](tg://user?id={cmd.from_user.id}) And His/her username is \n **@{cmd.from_user.username}**\n And Userid is `{cmd.from_user.id}` !!"
-        )
-
-    ban_status = await db.get_ban_status(chat_id)
-    if ban_status["is_banned"]:
-        if (
-                datetime.date.today() - datetime.date.fromisoformat(ban_status["banned_on"])
-        ).days > ban_status["ban_duration"]:
-            await db.remove_ban(chat_id)
-        else:
-            await cmd.reply_text("You are Banned.", quote=True)
-            return
-    await cmd.continue_propagation()
-
-
-@Bot.on_message(filters.private)
-async def _(bot, cmd):
-    await foo(bot, cmd)
-
-# ----------------------------------------------------------->brodcast message Added
-
-broadcast_ids = {}
-import random
-import time
-import aiofiles
-from pyrogram.errors import FloodWait, InputUserDeactivated, UserIsBlocked, PeerIdInvalid
-import asyncio
-import traceback
-import string
-async def send_msg(user_id, message):
-    try:
-        await message.forward(chat_id=user_id)
-        return 200, None
-    except FloodWait as e:
-        await asyncio.sleep(e.x)
-        return send_msg(user_id, message)
-    except InputUserDeactivated:
-        return 400, f"{user_id} : deactivated\n"
-    except UserIsBlocked:
-        return 400, f"{user_id} : blocked the bot\n"
-    except PeerIdInvalid:
-        return 400, f"{user_id} : user id invalid\n"
-    except Exception as e:
-        return 500, f"{user_id} : {traceback.format_exc()}\n"
-
-@Bot.on_message(filters.private & filters.command("broadcastpelo") & filters.reply)
-async def broadcast_(c, m):
-    all_users = await db.get_all_users()
-    broadcast_msg = m.reply_to_message
-    while True:
-        broadcast_id = ''.join([random.choice(string.ascii_letters) for i in range(3)])
-        if not broadcast_ids.get(broadcast_id):
-            break
-    out = await m.reply_text(
-        text=f"Broadcast Started! You will be notified with log file when all the users are notified."
-    )
-    start_time = time.time()
-    total_users = await db.total_users_count()
-    done = 0
-    failed = 0
-    success = 0
-    broadcast_ids[broadcast_id] = dict(
-        total=total_users,
-        current=done,
-        failed=failed,
-        success=success
-    )
-    async with aiofiles.open('broadcast.txt', 'w') as broadcast_log_file:
-        async for user in all_users:
-            sts, msg = await send_msg(
-                user_id=int(user['id']),
-                message=broadcast_msg
-            )
-            if msg is not None:
-                await broadcast_log_file.write(msg)
-            if sts == 200:
-                success += 1
-            else:
-                failed += 1
-            if sts == 400:
-                await db.delete_user(user['id'])
-            done += 1
-            if broadcast_ids.get(broadcast_id) is None:
-                break
-            else:
-                broadcast_ids[broadcast_id].update(
-                    dict(
-                        current=done,
-                        failed=failed,
-                        success=success
-                    )
-                )
-    if broadcast_ids.get(broadcast_id):
-        broadcast_ids.pop(broadcast_id)
-    completed_in = datetime.timedelta(seconds=int(time.time() - start_time))
-    await asyncio.sleep(3)
-    await out.delete()
-    if failed == 0:
-        await m.reply_text(
-            text=f"broadcast completed in `{completed_in}`\n\nTotal users {total_users}.\nTotal done {done}, {success} success and {failed} failed.",
-            quote=True
-        )
     else:
-        await m.reply_document(
-            document='broadcast.txt',
-            caption=f"broadcast completed in `{completed_in}`\n\nTotal users {total_users}.\nTotal done {done}, {success} success and {failed} failed.",
-            quote=True
-        )
-    os.remove('broadcast.txt')
+        msg = await message.reply(REPLY_ERROR)
+        await asyncio.sleep(8)
+        await msg.delete()
+        
+# Start command handler
+@Bot.on_message(filters.private & filters.command("start"))
+async def start(client, message):
+    id = message.from_user.id
+    if not await present_user(id):
+        try:
+            await add_user(id)
+        except:
+            pass
+    text = message.text
+    await message.reply_text(
+        text=Translation.START_TEXT.format(message.from_user.first_name),
+        reply_markup=InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton('📍 Update Channel', url='https://t.me/NT_BOT_CHANNEL'),
+            ],
+            [
+                InlineKeyboardButton('👩‍💻 Developer', url='https://t.me/LISA_FAN_LK'),
+                InlineKeyboardButton('👥 Support Group', url='https://t.me/NT_BOTS_SUPPORT'),
+            ],
+            [
+                InlineKeyboardButton('⛔️ Close', callback_data='cancel')
+            ]
+        ]
+    ))
 
- 
+# Help command handler
+@Bot.on_message(filters.command("help"))
+def help(client, message):
+    help_text = """
+    Welcome to the YouTube Video Uploader Bot!
 
-# ------------------------------------------------------->
-
-from .. import bot
-S = '/' + 's' + 't' + 'a' + 'r' + 't'
-
-@bot.on(events.NewMessage(incoming=True, pattern=f"{S}"))
-async def start(event):
-    text = "Hi👋 I am Save Restricted Content Bot\n\n**•FROM PUBLIC CHANNELS**\n-Send direct message/video link to clone it here.\n\n🚨`NOTE:-` Our bot does not support \nPRIVATE CHANNEL/GROUP.\n\nJoin for update:- @Save_Restricted_contentz\n🥂kindly /donate for service alive"
-    #await start_srb(event, text)
-    await event.reply(text, 
-
-                      buttons=[
-
-                              [Button.url("SOURCE", url="https://t.me/Save_Restricted_contentz/19"),
-                               Button.url("PREMIUM", url="https://t.me/Save_Restricted_contentz/18")],        
-                              [Button.url("JOIN UPDATE CHANNEL", url="t.me/RajZ_Bots")]])                             
-
-@bot.on(events.NewMessage(incoming=True, pattern='/donate'))                       
-async def donate(event):
-    text = "** If this bot helped you , kindly Donate to keep this service alive. you can send any amount**\n20₹, 30₹, 50₹, 100₹\n\n🔘 Payment Methods : `aman-9298@paytm` \n aman-9298@paytm \n `aman-9298@paytm` " 
-    await event.reply(text)
+To upload a YouTube video, simply send me the YouTube link.
     
-@bot.on(events.NewMessage(incoming=True, pattern='/help'))                       
-async def donate(event):
-    text = "**Our bot supports only Public restricted channel**.\n\nIt does not support private channel/group and public group. Soon, A bot will be available for private download also." 
-    await event.reply(text)    
-    
-    '''
+Enjoy using the bot!
 
-    await event.reply(text, 
+   ©️ Channel : @NT_BOT_CHANNEL
+    """
+    message.reply_text(help_text)
 
-                      buttons=[
-
-                              [Button.inline("SET THUMB.", data="set"),
-
-                               Button.inline("REM THUMB.", data="rem")],
-
-                              [Button.url("Join to use me", url="t.me/Raj02_bots")]])
-
-    '''
-
-    
-
+########################🎊 Lisa | NT
