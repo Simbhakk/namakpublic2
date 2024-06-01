@@ -11,3 +11,4 @@ python-decouple
 requests
 pymongo
 motor
+aiofiles
