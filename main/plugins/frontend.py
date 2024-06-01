@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 logging.getLogger("pyrogram").setLevel(logging.INFO)
 logging.getLogger("telethon").setLevel(logging.INFO)
 
-ft = f"You have to join @RajZ_bots & @{fs} to use me."
+ft = f"You have to join @RajZ_bots & @{fs} to use me.\nFirst join these channel then use this bot."
 
 message = "Send me the message link you want to start saving from, as a reply to this message."
           
@@ -103,7 +103,7 @@ async def clone(event):
                 m = msg_id
                 await get_msg(userbot, Bot, event.sender_id, edit.id, link, m, file_name)
         except FloodWait as fw:
-            await Invix.send_message(event.sender_id, f'Try again after {fw.value} seconds due to floodwait from Telegram.\n Or use our second bot:- @@Save_Restricted_Content_Raj_Bot 🤭')
+            await Invix.send_message(event.sender_id, f'Try again after {fw.value} seconds due to floodwait from Telegram.\n Or use our second bot:- @Save_Restricted_Content_Raj_Bot 🤭')
             await edit.delete()
         except Exception as e:
             logging.info(e)
