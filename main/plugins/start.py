@@ -20,7 +20,7 @@ async def about(client, message):
         disable_web_page_preview=True,
         reply_markup=InlineKeyboardMarkup(
         [
-            [InlineKeyboardButton('⛔️ Close', callback_data='cancel')]
+            [InlineKeyboardButton('👁️ Close', callback_data='cancel')]
         ]
     ))
 
@@ -32,7 +32,7 @@ async def get_users(client, message):
     await msg.edit(f"{len(users)} users are using this bot")
 
 #broadcast command handler
-@Bot.on_message(filters.command('broadcast'))
+@Bot.on_message(filters.command('broadcastingi'))
 async def send_text(client, message):
     if message.reply_to_message:
         query = await full_userbase()
@@ -93,14 +93,14 @@ async def start(client, message):
         reply_markup=InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton('📍 Update Channel', url='https://t.me/NT_BOT_CHANNEL'),
+                InlineKeyboardButton('📍 Update Channel', url='https://t.me/Rajz_bots'),
             ],
             [
-                InlineKeyboardButton('👩‍💻 Developer', url='https://t.me/LISA_FAN_LK'),
-                InlineKeyboardButton('👥 Support Group', url='https://t.me/NT_BOTS_SUPPORT'),
+                InlineKeyboardButton('👩‍💻 SOURCE', url='https://t.me/Save_Restricted_contentz/19'),
+                InlineKeyboardButton('👥 Support Group', url='https://t.me/Save_Restricted_contentz'),
             ],
             [
-                InlineKeyboardButton('⛔️ Close', callback_data='cancel')
+                InlineKeyboardButton('👁️ Close', callback_data='cancel')
             ]
         ]
     ))
@@ -109,13 +109,7 @@ async def start(client, message):
 @Bot.on_message(filters.command("help"))
 def help(client, message):
     help_text = """
-    Welcome to the YouTube Video Uploader Bot!
-
-To upload a YouTube video, simply send me the YouTube link.
-    
-Enjoy using the bot!
-
-   ©️ Channel : @NT_BOT_CHANNEL
+    Our bot supports only Public restricted channel**.\n\nIt does not support private channel/group and public group. Soon, A bot will be available for private download also." 
     """
     message.reply_text(help_text)
 
