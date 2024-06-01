@@ -114,7 +114,7 @@ async def start(client, message):
 @Bot.on_message(filters.command("help"))
 def help(client, message):
     help_text = """
-    Hi Sir 👋\nOur bot supports only Public restricted channel**.\n\nIt does not support private channel/group and public group. Soon, A bot will be available for private download also.\n Thanks 👍" 
+    Hi, Sir 👋\nOur bot supports only Public restricted channel**\ne.g:-https://t.me/channelusername/43. \nIt does not support private channel/group and public group. Soon, A bot will be available for private download also.\n Thanks 👍" 
     """
     message.reply_text(help_text,
     reply_markup=InlineKeyboardMarkup(
