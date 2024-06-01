@@ -93,11 +93,11 @@ async def start(client, message):
         reply_markup=InlineKeyboardMarkup(
         [
             [
-                InlineKeyboardButton('📍 Update Channel', url='https://t.me/Rajz_bots'),
+                InlineKeyboardButton('📍 Update Channel', url='https://t.me/Save_Restricted_contentz'),
             ],
             [
                 InlineKeyboardButton('👩‍💻 SOURCE', url='https://t.me/Save_Restricted_contentz/19'),
-                InlineKeyboardButton('👥 Support Group', url='https://t.me/Save_Restricted_contentz'),
+                InlineKeyboardButton('🍻 Support Group', url='https://t.me/Rajz_bots'),
             ],
             [
                 InlineKeyboardButton('👁️ Close', callback_data='cancel')
