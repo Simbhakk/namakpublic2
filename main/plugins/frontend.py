@@ -61,13 +61,6 @@ async def clone(event):
             await event.reply(ft)
             return
         edit = await event.reply("Processing!")
-        id = message.from_user.id
-        if not await present_user(id):
-            try:
-                await add_user(id)
-            except:
-                pass
-        text = message.text
         if link.startswith("http") or link.startswith("www"):
             # Check if the user has sent a message before
             if event.sender_id in last_message_time:
