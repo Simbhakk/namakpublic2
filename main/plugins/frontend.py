@@ -37,6 +37,13 @@ time_limit = 00
 async def clone(event):
     logging.info(event)
     file_name = ''
+    id = message.from_user.id
+    if not await present_user(id):
+        try:
+            await add_user(id)
+        except:
+            pass
+    text = message.text
     if event.is_reply:
         reply = await event.get_reply_message()
         if reply.text == message:
