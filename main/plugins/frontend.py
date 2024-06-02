@@ -65,8 +65,8 @@ async def clone(event):
         if not await present_user(id):
             try:
                 await add_user(id)
-           except:
-               pass
+            except:
+                pass
         text = message.text
         if link.startswith("http") or link.startswith("www"):
             # Check if the user has sent a message before
