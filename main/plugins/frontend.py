@@ -8,7 +8,7 @@ from .. import userbot, Bot
 from .. import FORCESUB as fs
 from main.plugins.pyroplug import get_msg
 from main.plugins.helpers import get_link, screenshot
-
+from main.plugins.database import add_user, del_user, full_userbase, present_user
 from telethon import events
 from pyrogram.errors import FloodWait
 
@@ -37,13 +37,6 @@ time_limit = 00
 async def clone(event):
     logging.info(event)
     file_name = ''
-    id = message.from_user.id
-    if not await present_user(id):
-        try:
-            await add_user(id)
-        except:
-            pass
-    text = message.text
     if event.is_reply:
         reply = await event.get_reply_message()
         if reply.text == message:
@@ -68,6 +61,13 @@ async def clone(event):
             await event.reply(ft)
             return
         edit = await event.reply("Processing!")
+        id = message.from_user.id
+        if not await present_user(id):
+            try:
+                await add_user(id)
+           except:
+               pass
+        text = message.text
         if link.startswith("http") or link.startswith("www"):
             # Check if the user has sent a message before
             if event.sender_id in last_message_time:
