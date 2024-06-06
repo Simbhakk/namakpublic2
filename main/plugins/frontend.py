@@ -103,7 +103,9 @@ async def clone(event):
                 m = msg_id
                 await get_msg(userbot, Bot, event.sender_id, edit.id, link, m, file_name)
         except FloodWait as fw:
-            await Invix.send_message(event.sender_id, f'Try again after {fw.value} seconds due to floodwait from Telegram.\n Or use our second bot:- @Save_Restricted_Content_Raj_Bot 🤭')
+            hours, remainder = divmod(fw.value, 3600)  # Calculate hours and remaining seconds
+            minutes, seconds = divmod(remainder, 60)
+            await Invix.send_message(event.sender_id, f'Try again after {hours} hours, {minutes} minutes, and {seconds} seconds due to floodwait from telegram.\n Or use our second bot:- @Save_Restricted_Content_Raj_Bot 🤭')
             await edit.delete()
         except Exception as e:
             logging.info(e)
